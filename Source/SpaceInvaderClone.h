@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InputHandler.h"
+#include "EventHandler.h"
 #include "Constants.h"
 
 class SpaceInvaderClone
@@ -15,7 +15,7 @@ public:
 	int run();
 
 private:
-	InputHandler inputhandler;
+	EventHandler inputhandler;
 
 	bool init();
 	void cleanUp();

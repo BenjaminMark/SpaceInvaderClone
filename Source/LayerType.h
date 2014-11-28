@@ -1,4 +1,5 @@
 #pragma once
+
 enum LayerType
 {
 	LAYER_BACKGROUND = 0,

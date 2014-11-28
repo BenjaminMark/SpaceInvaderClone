@@ -3,6 +3,7 @@
 #include "Vector2.h"
 #include "Texture.h"
 #include "LayerType.h"
+#include "SpaceEvent.h"
 #include <set>
 #include <queue>
 #include <memory>
@@ -22,9 +23,9 @@ public:
 	static void updateAll();
 	static void renderAll();
 
-	virtual void update();
+	virtual void update() = 0;
 	virtual void render();
-	void notify(const SDL_Event &e);
+	void notify(std::shared_ptr<SpaceEvent> e);
 	Vector2 getPosition() { return position; }
 	bool isDead(){ return !alive; }
 
@@ -36,9 +37,9 @@ protected:
 	//List of all game objects. Used for rendering, updating and collisions.
 	static std::unordered_multimap<LayerType, std::shared_ptr<GameObject>> gameObjectList;
 
-	Texture* texture;
+	std::shared_ptr<Texture> texture;
 
-	std::queue<const SDL_Event*> inputQueue;
+	std::queue<std::shared_ptr<SpaceEvent>> eventQueue;
 
 	Vector2 position;
 	bool alive;

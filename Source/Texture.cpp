@@ -45,7 +45,7 @@ bool Texture::load(std::string path)
 
 void Texture::free()
 {
-	if (texture != nullptr){
+	if (texture){
 		SDL_DestroyTexture(texture);
 		texture = nullptr;
 		w = 0;

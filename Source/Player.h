@@ -1,26 +1,29 @@
 #pragma once
 
 #include "GameObject.h"
+#include "InputEvent.h"
 
-enum PlayerTexture;
+enum PlayerTextureType;
 
 class Player : public GameObject
 {
 public:
-	Player(PlayerTexture texture_);
+	Player(PlayerTextureType texture_);
 	virtual ~Player();
 
 	virtual void update() override;
+	static void newPlayer(PlayerTextureType);
 	static bool loadTextures(std::string basePath);
 	static void cleanTextures();
 
-private:
-	static std::vector<Texture*> playerTextures;
-
+protected:
+	static std::vector<std::shared_ptr<Texture>> playerTextures;
+	virtual void handleInput(std::shared_ptr<InputEvent> inputEvent);
+	
 };
 
 //This should most likely be in a config file
-enum PlayerTexture {
+enum PlayerTextureType {
 	PLAYERTEX_0 = 0,
 	NUM_PLAYERTEXTURES
 };

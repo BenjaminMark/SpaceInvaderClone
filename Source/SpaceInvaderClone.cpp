@@ -1,4 +1,5 @@
 #include "SpaceInvaderClone.h"
+#include "GameObject.h"
 #include "Background.h"
 #include "Player.h"
 #include "SDL_TTF.h"
@@ -27,7 +28,7 @@ int SpaceInvaderClone::run()
 
 	while (!quit){
 		frameTimer.start();
-		quit = inputhandler.handleInput();
+		quit = inputhandler.handleEvents();
 
 		GameObject::updateAll();
 
@@ -104,6 +105,7 @@ void SpaceInvaderClone::handleTextures(bool cleanUp)
 {
 	if (!cleanUp){
 		Player::loadTextures("Data/Player/playerTexture");
+		//Expand here with more gameobject classes
 	}
 	else {
 		Player::cleanTextures();
@@ -111,8 +113,7 @@ void SpaceInvaderClone::handleTextures(bool cleanUp)
 }
 
 void SpaceInvaderClone::initObjects()
-{
-	Player* player = new Player(PLAYERTEX_0);
-	GameObject* background = new Background();
-	
+{	
+	Player::newPlayer(PLAYERTEX_0);
+	Background::newBackground(BACKGROUNDTEX_0);
 }
