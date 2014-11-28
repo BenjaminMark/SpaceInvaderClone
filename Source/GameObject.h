@@ -15,7 +15,13 @@
 class GameObject
 {
 public:
+	//List of all game objects. Used for rendering, updating and collisions.
+	static std::unordered_multimap<LayerType, std::shared_ptr<GameObject>> gameObjectList;
+
 	LayerType layer;
+	Vector2 position;
+	Vector2 dimensions;
+	bool collisionEnabled;
 
 	GameObject(LayerType layer_);
 	virtual ~GameObject();
@@ -25,24 +31,21 @@ public:
 
 	virtual void update() = 0;
 	virtual void render();
+	bool checkCollision(std::shared_ptr<const GameObject> other);
 	void notify(std::shared_ptr<SpaceEvent> e);
-	Vector2 getPosition() { return position; }
 	bool isDead(){ return !alive; }
 
-	bool collisionsEnabled(){ return collides; }
-	void enableCollisions(){ collides = true; }
-	void disableCollisions(){ collides = false; }
+	
+	
 	
 protected:
-	//List of all game objects. Used for rendering, updating and collisions.
-	static std::unordered_multimap<LayerType, std::shared_ptr<GameObject>> gameObjectList;
 
 	std::shared_ptr<Texture> texture;
 
 	std::queue<std::shared_ptr<SpaceEvent>> eventQueue;
 
-	Vector2 position;
+	virtual void move(const Vector2 direction);
+
 	bool alive;
-	bool collides;
 		
 };

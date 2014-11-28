@@ -8,7 +8,7 @@ std::vector<std::shared_ptr<Texture>> Player::playerTextures;
 Player::Player(PlayerTextureType texture_) : GameObject(LAYER_ACTORS)
 {
 	texture = playerTextures[texture_];
-	collides = true;
+	collisionEnabled = true;
 }
 
 
@@ -23,11 +23,13 @@ void Player::update()
 		auto curEvent = eventQueue.front();
 		eventQueue.pop();
 
-		if (curEvent->type == INPUT_EVENT){
+		if (curEvent->type == EVENT_INPUT){
 			std::shared_ptr<InputEvent> inputEvent = std::dynamic_pointer_cast<InputEvent>(curEvent);
 			handleInput(inputEvent);
 		}
 	}
+
+	movePlayer();
 }
 
 void Player::newPlayer(PlayerTextureType texType)
@@ -35,7 +37,7 @@ void Player::newPlayer(PlayerTextureType texType)
 	std::shared_ptr<GameObject> object = std::make_shared<Player>(texType);
 	gameObjectList.emplace(object->layer, object);
 
-	EventHandler::registerObserver(std::weak_ptr<GameObject>(object), INPUT_EVENT);
+	EventHandler::registerObserver(std::weak_ptr<GameObject>(object), EVENT_INPUT);
 }
 
 bool Player::loadTextures(std::string basePath)
@@ -64,14 +66,20 @@ void Player::handleInput(std::shared_ptr<InputEvent> inputEvent)
 	if (inputEvent.use_count() != 0 && inputEvent->input->type == SDL_KEYDOWN){
 		switch (inputEvent->input->key.keysym.sym)
 		{
-		case SDLK_DOWN:
-			position = Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2); 
-			break;
-		case SDLK_UP:
-			position = Vector2();
-			break;
 		default:
 			break;
 		}
+	}
+}
+
+void Player::movePlayer(){
+	SDL_PumpEvents();
+	const Uint8* keystate = SDL_GetKeyboardState(NULL);
+
+	if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
+		move(Vector2(-PLAYER_SPEED, 0));
+	}
+	if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
+		move(Vector2(PLAYER_SPEED, 0));
 	}
 }

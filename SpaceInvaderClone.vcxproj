@@ -70,10 +70,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\CollisionEvent.cpp" />
     <ClCompile Include="Source\AudioEvent.cpp" />
     <ClCompile Include="Source\ScoreEvent.cpp" />
     <ClCompile Include="Source\InputEvent.cpp" />
-    <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Background.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -86,10 +86,10 @@
     <ClCompile Include="Source\SpaceEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\CollisionEvent.h" />
     <ClInclude Include="Source\AudioEvent.h" />
     <ClInclude Include="Source\ScoreEvent.h" />
     <ClInclude Include="Source\InputEvent.h" />
-    <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Background.h" />
     <ClInclude Include="Source\Constants.h" />
     <ClInclude Include="Source\LayerType.h" />

@@ -19,6 +19,8 @@ public:
 protected:
 	static std::vector<std::shared_ptr<Texture>> playerTextures;
 	virtual void handleInput(std::shared_ptr<InputEvent> inputEvent);
+
+	void movePlayer();
 	
 };
 

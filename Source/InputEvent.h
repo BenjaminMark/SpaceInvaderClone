@@ -6,9 +6,9 @@
 class InputEvent : public SpaceEvent
 {
 public:
+	std::unique_ptr<const SDL_Event> input;
+
 	InputEvent();
 	~InputEvent();
-
-	std::unique_ptr<const SDL_Event> input;
 };
 

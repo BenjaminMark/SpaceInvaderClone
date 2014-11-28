@@ -14,3 +14,31 @@ Vector2::Vector2(int x_, int y_) : x(x_), y(y_)
 Vector2::~Vector2()
 {
 }
+
+Vector2& Vector2::operator+=(const Vector2& other)
+{
+	x += other.x;
+	y += other.y;
+	return *this;
+}
+
+const Vector2 Vector2::operator+(const Vector2& other)
+{
+	Vector2 result = *this;
+	result += other;
+	return result;
+}
+
+Vector2& Vector2::operator-=(const Vector2& other)
+{
+	x -= other.x;
+	y -= other.y;
+	return *this;
+}
+
+const Vector2 Vector2::operator-(const Vector2& other)
+{
+	Vector2 result = *this;
+	result -= other;
+	return result;
+}
