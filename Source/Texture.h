@@ -5,6 +5,9 @@
 #include <SDL_image.h>
 #include <stdio.h>
 #include <string>
+#include <unordered_map>
+#include <memory>
+#include <string>
 
 class Texture
 {
@@ -12,7 +15,7 @@ public:
 	Texture();
 	~Texture();
 
-	bool load(std::string path);
+	static std::shared_ptr<Texture> load(std::string path);
 	void free();
 	void render(Vector2 position);
 	int width(){ return w; }
@@ -20,6 +23,8 @@ public:
 
 private:
 	SDL_Texture* texture;
+
+	static std::unordered_map<std::string, std::weak_ptr<Texture>> textureMap;
 
 	int w, h;
 };

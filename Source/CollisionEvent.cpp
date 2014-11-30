@@ -1,7 +1,7 @@
 #include "CollisionEvent.h"
 
 
-CollisionEvent::CollisionEvent() : SpaceEvent(EVENT_COLLISION)
+CollisionEvent::CollisionEvent(LayerType senderLayer_) : SpaceEvent(EVENT_COLLISION), senderLayer(senderLayer_)
 {
 }
 

@@ -1,10 +1,9 @@
 #include "Background.h"
 
 
-Background::Background(BackgroundTextureType texType) : GameObject(LAYER_BACKGROUND)
+Background::Background(std::string texturePath) : GameObject(LAYER_BACKGROUND)
 {
-	texture = std::make_shared<Texture>(); //Needs to be removed if background is expanded to work like other entities
-	texture->load("Data/background.png");
+	texture = Texture::load(texturePath);
 }
 
 
@@ -13,10 +12,9 @@ Background::~Background()
 	
 }
 
-void Background::newBackground(BackgroundTextureType texType)
+void Background::newBackground(std::string texturePath)
 {
-	std::shared_ptr<GameObject> object = std::make_shared<Background>(texType);
-	gameObjectList.emplace(object->layer, object);
+	GameObject::registerObject(std::make_shared<Background>(texturePath));
 }
 
 void Background::update()

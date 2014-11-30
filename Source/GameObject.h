@@ -9,15 +9,13 @@
 #include <memory>
 #include <unordered_map>
 
+
 /*
 * The base for every object in the game.
 */
 class GameObject
 {
 public:
-	//List of all game objects. Used for rendering, updating and collisions.
-	static std::unordered_multimap<LayerType, std::shared_ptr<GameObject>> gameObjectList;
-
 	LayerType layer;
 	Vector2 position;
 	Vector2 dimensions;
@@ -39,13 +37,17 @@ public:
 	
 	
 protected:
-
+	GameObject(LayerType layer_, std::shared_ptr<Texture> texture_, bool collisionenabled_, Vector2 startPos);
 	std::shared_ptr<Texture> texture;
-
 	std::queue<std::shared_ptr<SpaceEvent>> eventQueue;
 
+	static void registerObject(std::shared_ptr<GameObject> object);
 	virtual void move(const Vector2 direction);
+	
 
 	bool alive;
-		
+
+private:
+	//List of all game objects. Used for rendering, updating and collisions
+	static std::unordered_multimap<LayerType, std::shared_ptr<GameObject>> gameObjectList;
 };

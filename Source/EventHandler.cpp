@@ -29,13 +29,14 @@ bool EventHandler::handleEvents()
 		auto recipients = observers.find(curEvent->type);
 
 		if (recipients != observers.end()){
-			for (auto it = recipients->second.begin(); it != recipients->second.end(); ++it){
+			for (auto it = recipients->second.begin(); it != recipients->second.end(); ){
 				if (it->expired()){
 					it = recipients->second.erase(it);
 					continue;
 				}
 				else {
 					it->lock()->notify(curEvent);
+					++it;
 				}
 			}
 		}

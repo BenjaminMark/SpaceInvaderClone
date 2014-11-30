@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include <string>
 
 enum BackgroundTextureType; 
 
@@ -7,15 +8,11 @@ class Background : public GameObject
 {
 public:
 
-	Background(BackgroundTextureType texType);
+	Background(std::string texturePath);
 	virtual ~Background();
 
 	virtual void update();
-	static void newBackground(BackgroundTextureType texType);
-	
-
-protected:
-	
+	static void newBackground(std::string texturePath);
 };
 
 enum BackgroundTextureType{

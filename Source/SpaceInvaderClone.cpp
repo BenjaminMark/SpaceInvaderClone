@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "Background.h"
 #include "Player.h"
+#include "ScoreCounter.h"
+#include "Enemy.h"
 #include "SDL_TTF.h"
 #include "Timer.h"
 
@@ -33,6 +35,11 @@ int SpaceInvaderClone::run()
 		GameObject::updateAll();
 
 		GameObject::renderAll();
+
+		if (Enemy::getNumEnemies() == 0){
+
+		}
+
 		if (frameTimer.getTicks() < TICKS_PER_FRAME){
 			SDL_Delay(TICKS_PER_FRAME - frameTimer.getTicks());
 		}
@@ -82,7 +89,6 @@ bool SpaceInvaderClone::init()
 		return false;
 	}
 
-	handleTextures(false);
 	initObjects();
 
 	return true;
@@ -90,7 +96,6 @@ bool SpaceInvaderClone::init()
 
 void SpaceInvaderClone::cleanUp()
 {
-	handleTextures(true);
 
 	SDL_DestroyRenderer(SpaceInvaderClone::renderer);
 	SDL_DestroyWindow(SpaceInvaderClone::window);
@@ -101,19 +106,23 @@ void SpaceInvaderClone::cleanUp()
 	SDL_Quit();
 }
 
-void SpaceInvaderClone::handleTextures(bool cleanUp)
-{
-	if (!cleanUp){
-		Player::loadTextures("Data/Player/playerTexture");
-		//Expand here with more gameobject classes
-	}
-	else {
-		Player::cleanTextures();
-	}
-}
 
 void SpaceInvaderClone::initObjects()
 {	
-	Player::newPlayer(PLAYERTEX_0);
-	Background::newBackground(BACKGROUNDTEX_0);
+	Vector2 curEnemyPos = ENEMY_STARTPOS;
+
+	for (int i = 0; i < NUM_ROWS; ++i){
+		for (int j = 0; j < ENEMIES_PER_ROW; j++){
+			Enemy::newEnemy("Data/Enemies/enemy_0.png", curEnemyPos);
+			curEnemyPos.x += ENEMY_DISTANCE;
+		}
+		curEnemyPos.x = ENEMY_STARTPOS.x;
+		curEnemyPos.y += ROW_DISTANCE;
+	}
+
+
+	Player::newPlayer("Data/Player/player_0.png", Vector2(WINDOW_WIDTH/2-30, WINDOW_HEIGHT-100));
+	Background::newBackground("Data/background_0.png");
+	
+	ScoreCounter::newScoreCounter();
 }

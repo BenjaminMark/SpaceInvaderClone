@@ -2,13 +2,13 @@
 #include "EventHandler.h"
 #include "InputEvent.h"
 #include "Constants.h"
+#include <string>
+#include "Projectile.h"
 
-std::vector<std::shared_ptr<Texture>> Player::playerTextures;
 
-Player::Player(PlayerTextureType texture_) : GameObject(LAYER_ACTORS)
+Player::Player(std::string texturePath, Vector2 startPos) : GameObject(LAYER_ACTORS, Texture::load(texturePath), true, startPos)
 {
-	texture = playerTextures[texture_];
-	collisionEnabled = true;
+
 }
 
 
@@ -32,33 +32,12 @@ void Player::update()
 	movePlayer();
 }
 
-void Player::newPlayer(PlayerTextureType texType)
+void Player::newPlayer(std::string texturePath, Vector2 startPos)
 {
-	std::shared_ptr<GameObject> object = std::make_shared<Player>(texType);
-	gameObjectList.emplace(object->layer, object);
+	std::shared_ptr<GameObject> object = std::make_shared<Player>(texturePath, startPos);
+	GameObject::registerObject(object);
 
 	EventHandler::registerObserver(std::weak_ptr<GameObject>(object), EVENT_INPUT);
-}
-
-bool Player::loadTextures(std::string basePath)
-{
-	for (int i = 0; i < NUM_PLAYERTEXTURES; ++i){
-		std::shared_ptr<Texture> texPtr = std::make_shared<Texture>();
-		
-		if (!(texPtr->load(basePath + "_" + std::to_string(i) + ".png"))){
-			printf("Failed to Load Player Texture: %d", i);
-			return false;
-		}
-		else {
-			playerTextures.push_back(texPtr);
-		}
-	}
-	return true;
-}
-
-void Player::cleanTextures()
-{
-	playerTextures.clear();
 }
 
 void Player::handleInput(std::shared_ptr<InputEvent> inputEvent)
@@ -66,6 +45,9 @@ void Player::handleInput(std::shared_ptr<InputEvent> inputEvent)
 	if (inputEvent.use_count() != 0 && inputEvent->input->type == SDL_KEYDOWN){
 		switch (inputEvent->input->key.keysym.sym)
 		{
+		case SDLK_SPACE:
+			Projectile::newProjectile("Data/Projectiles/projectile_0.png",Vector2(position.x+dimensions.x/2, position.y-20),Vector2(0,-1));
+			break;
 		default:
 			break;
 		}

@@ -42,3 +42,17 @@ const Vector2 Vector2::operator-(const Vector2& other)
 	result -= other;
 	return result;
 }
+
+Vector2& Vector2::operator*=(const int& other)
+{
+	x *= other;
+	y *= other;
+	return *this;
+}
+
+const Vector2 Vector2::operator*(const int& other)
+{
+	Vector2 result = *this;
+	result *= other;
+	return result;
+}

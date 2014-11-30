@@ -9,7 +9,7 @@ class CollisionEvent : public SpaceEvent
 public:
 	LayerType senderLayer;
 
-	CollisionEvent();
+	CollisionEvent(LayerType senderLayer_);
 	virtual ~CollisionEvent();
 };
 

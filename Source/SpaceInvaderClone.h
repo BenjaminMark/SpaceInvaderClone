@@ -19,7 +19,6 @@ private:
 
 	bool init();
 	void cleanUp();
-	void handleTextures(bool cleanUp);
 	void initObjects();
 };
 

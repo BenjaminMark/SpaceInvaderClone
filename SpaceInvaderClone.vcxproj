@@ -70,8 +70,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\Projectile.cpp" />
     <ClCompile Include="Source\CollisionEvent.cpp" />
     <ClCompile Include="Source\AudioEvent.cpp" />
+    <ClCompile Include="Source\ScoreCounter.cpp" />
     <ClCompile Include="Source\ScoreEvent.cpp" />
     <ClCompile Include="Source\InputEvent.cpp" />
     <ClCompile Include="Source\Background.cpp" />
@@ -86,8 +89,11 @@
     <ClCompile Include="Source\SpaceEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\Projectile.h" />
     <ClInclude Include="Source\CollisionEvent.h" />
     <ClInclude Include="Source\AudioEvent.h" />
+    <ClInclude Include="Source\ScoreCounter.h" />
     <ClInclude Include="Source\ScoreEvent.h" />
     <ClInclude Include="Source\InputEvent.h" />
     <ClInclude Include="Source\Background.h" />

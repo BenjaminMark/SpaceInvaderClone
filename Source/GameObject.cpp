@@ -6,6 +6,14 @@ std::unordered_multimap<LayerType, std::shared_ptr<GameObject>> GameObject::game
 
 GameObject::GameObject(LayerType layer_) : layer(layer_), alive(true), collisionEnabled(false)
 {
+
+}
+
+GameObject::GameObject(LayerType layer_, std::shared_ptr<Texture> texture_, bool collisionEnabled_, Vector2 startPos)
+	: layer(layer_), texture(texture_), collisionEnabled(collisionEnabled_), alive(true)
+{
+	dimensions = Vector2(texture->width(), texture->height());
+	move(startPos);
 }
 
 
@@ -34,16 +42,29 @@ void GameObject::notify(std::shared_ptr<SpaceEvent> e)
 void GameObject::move(const Vector2 direction)
 {
 	Vector2 newPos = position + direction;
+	bool outofbounds = false;
 
 	//Clamp values to fit on screen
-	if (newPos.x < 0)
+	if (newPos.x < 0){
 		newPos.x = 0;
-	if (newPos.y < 0)
+		outofbounds = true;
+	}
+	if (newPos.y < 0){
 		newPos.y = 0;
-	if (newPos.x + dimensions.x >= WINDOW_WIDTH)
+		outofbounds = true;
+	}
+	if (newPos.x + dimensions.x >= WINDOW_WIDTH){
 		newPos.x = WINDOW_WIDTH - dimensions.x;
-	if (newPos.y + dimensions.y >= WINDOW_HEIGHT)
+		outofbounds = true;
+	}
+	if (newPos.y + dimensions.y >= WINDOW_HEIGHT){
 		newPos.y = WINDOW_HEIGHT - dimensions.y;
+		outofbounds = true;
+	}
+
+	if (outofbounds){
+		notify(std::make_shared<CollisionEvent>(LAYER_BACKGROUND));
+	}
 
 	if (!collisionEnabled){
 		position = newPos;
@@ -52,17 +73,13 @@ void GameObject::move(const Vector2 direction)
 
 	for (auto pair : GameObject::gameObjectList){
 		if (pair.second.get() != this && checkCollision(pair.second)){
+
 			//Notify ourself that we've collided with something
-			CollisionEvent* selfEvent = new CollisionEvent();
-			selfEvent->senderLayer = pair.second->layer;
-			std::shared_ptr<SpaceEvent> packagedSelfEvent(selfEvent);
-			notify(packagedSelfEvent);
+			notify(std::make_shared<CollisionEvent>(pair.second->layer));
 
 			//Notify the other object that they've been collided with
-			CollisionEvent* otherEvent = new CollisionEvent();
-			otherEvent->senderLayer = layer;
-			std::shared_ptr<SpaceEvent> packagedOtherEvent(otherEvent);
-			pair.second->notify(packagedOtherEvent);
+			pair.second->notify(std::make_shared<CollisionEvent>(layer));
+
 
 			//Move back enough to not be colliding.
 			if (abs(direction.x) > abs(direction.y)){
@@ -113,12 +130,13 @@ bool GameObject::checkCollision(std::shared_ptr<const GameObject> other)
 
 void GameObject::updateAll()
 {
-	for (auto it = gameObjectList.begin(); it != gameObjectList.end(); ++it){
+	for (auto it = gameObjectList.begin(); it != gameObjectList.end(); ){
 		if (it->second->isDead()){
 			it = gameObjectList.erase(it);
 		}
 		else {
 			it->second->update();
+			++it;
 		}
 	}
 }
@@ -137,4 +155,8 @@ void GameObject::renderAll()
 	}
 
 	SDL_RenderPresent(SpaceInvaderClone::renderer);
+}
+
+void GameObject::registerObject(std::shared_ptr<GameObject> object){
+	gameObjectList.emplace(object->layer, object);
 }
