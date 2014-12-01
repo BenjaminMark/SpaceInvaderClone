@@ -111,13 +111,13 @@ void SpaceInvaderClone::initObjects()
 {	
 	Vector2 curEnemyPos = ENEMY_STARTPOS;
 
-	for (int i = 0; i < NUM_ROWS; ++i){
+	for (int i = 0; i < ENEMY_NUM_ROWS; ++i){
 		for (int j = 0; j < ENEMIES_PER_ROW; j++){
 			Enemy::newEnemy("Data/Enemies/enemy_0.png", curEnemyPos);
-			curEnemyPos.x += ENEMY_DISTANCE;
+			curEnemyPos.x += ENEMY_HOR_DISTANCE;
 		}
 		curEnemyPos.x = ENEMY_STARTPOS.x;
-		curEnemyPos.y += ROW_DISTANCE;
+		curEnemyPos.y += ENEMY_ROW_DISTANCE;
 	}
 
 

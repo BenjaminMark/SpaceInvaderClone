@@ -29,7 +29,7 @@ public:
 
 	virtual void update() = 0;
 	virtual void render();
-	bool checkCollision(std::shared_ptr<const GameObject> other);
+
 	void notify(std::shared_ptr<SpaceEvent> e);
 	bool isDead(){ return !alive; }
 
@@ -42,10 +42,14 @@ protected:
 	std::queue<std::shared_ptr<SpaceEvent>> eventQueue;
 
 	static void registerObject(std::shared_ptr<GameObject> object);
+	static void handleCollisions(std::shared_ptr<GameObject> object);
+	static bool checkCollision(std::shared_ptr<const GameObject> lhs, std::shared_ptr<const GameObject> rhs);
 	virtual void move(const Vector2 direction);
 	
 
 	bool alive;
+	bool hasMoved;
+	Vector2 lastPosition;
 
 private:
 	//List of all game objects. Used for rendering, updating and collisions

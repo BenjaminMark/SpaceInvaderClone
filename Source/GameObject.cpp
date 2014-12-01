@@ -10,7 +10,7 @@ GameObject::GameObject(LayerType layer_) : layer(layer_), alive(true), collision
 }
 
 GameObject::GameObject(LayerType layer_, std::shared_ptr<Texture> texture_, bool collisionEnabled_, Vector2 startPos)
-	: layer(layer_), texture(texture_), collisionEnabled(collisionEnabled_), alive(true)
+	: layer(layer_), texture(texture_), collisionEnabled(collisionEnabled_), alive(true), hasMoved(false)
 {
 	dimensions = Vector2(texture->width(), texture->height());
 	move(startPos);
@@ -41,84 +41,91 @@ void GameObject::notify(std::shared_ptr<SpaceEvent> e)
 
 void GameObject::move(const Vector2 direction)
 {
-	Vector2 newPos = position + direction;
+	hasMoved = true;
+	lastPosition = position;
+
+	position += direction;
+}
+
+void GameObject::handleCollisions(std::shared_ptr<GameObject> object)
+{
+	
+
 	bool outofbounds = false;
 
 	//Clamp values to fit on screen
-	if (newPos.x < 0){
-		newPos.x = 0;
+	if (object->position.x < 0){
+		object->position.x = 0;
 		outofbounds = true;
 	}
-	if (newPos.y < 0){
-		newPos.y = 0;
+	if (object->position.y < 0){
+		object->position.y = 0;
 		outofbounds = true;
 	}
-	if (newPos.x + dimensions.x >= WINDOW_WIDTH){
-		newPos.x = WINDOW_WIDTH - dimensions.x;
+	if (object->position.x + object->dimensions.x >= WINDOW_WIDTH){
+		object->position.x = WINDOW_WIDTH - object->dimensions.x;
 		outofbounds = true;
 	}
-	if (newPos.y + dimensions.y >= WINDOW_HEIGHT){
-		newPos.y = WINDOW_HEIGHT - dimensions.y;
+	if (object->position.y + object->dimensions.y >= WINDOW_HEIGHT){
+		object->position.y = WINDOW_HEIGHT - object->dimensions.y;
 		outofbounds = true;
 	}
 
 	if (outofbounds){
-		notify(std::make_shared<CollisionEvent>(LAYER_BACKGROUND));
-	}
-
-	if (!collisionEnabled){
-		position = newPos;
-		return;
+		object->notify(std::make_shared<CollisionEvent>(LAYER_BACKGROUND));
 	}
 
 	for (auto pair : GameObject::gameObjectList){
-		if (pair.second.get() != this && checkCollision(pair.second)){
+		if (pair.second != object && checkCollision(object, pair.second)){
 
 			//Notify ourself that we've collided with something
-			notify(std::make_shared<CollisionEvent>(pair.second->layer));
+			object->notify(std::make_shared<CollisionEvent>(pair.second->layer));
 
 			//Notify the other object that they've been collided with
-			pair.second->notify(std::make_shared<CollisionEvent>(layer));
+			pair.second->notify(std::make_shared<CollisionEvent>(object->layer));
 
 
+			/*
 			//Move back enough to not be colliding.
-			if (abs(direction.x) > abs(direction.y)){
-				if (direction.x < 0){
-					newPos.x += (pair.second->position.x + pair.second->dimensions.x) - newPos.x;
+			if (abs(object->lastDirection.x) > abs(object->lastDirection.y)){
+				if (object->lastDirection.x < 0){
+					//object->position.x += (pair.second->position.x + pair.second->dimensions.x) - object->position.x;
 				}
 				else {
-					newPos.x += pair.second->position.x - (newPos.x + dimensions.x);
+					//object->position.x += pair.second->position.x - (object->position.x + object->dimensions.x);
 				}
 			}
 			else {
-				if (direction.y < 0){
-					newPos.y += (pair.second->position.y + pair.second->dimensions.y) - newPos.y;
+				if (object->lastDirection.y < 0){
+					//object->position.y += (pair.second->position.y + pair.second->dimensions.y) - object->position.y;
 				}
 				else {
-					newPos.y += pair.second->position.y - (newPos.y + dimensions.y);
+					//object->position.y += pair.second->position.y - (object->position.y + object->dimensions.y);
 				}
 			}
+			*/
 		}
 	}
 
-	position = newPos;
+	object->hasMoved = false;
+	object->lastPosition = Vector2();
 }
 
-bool GameObject::checkCollision(std::shared_ptr<const GameObject> other)
+bool GameObject::checkCollision(std::shared_ptr<const GameObject> lhs, std::shared_ptr<const GameObject> rhs)
 {
-	if (!other->collisionEnabled){
+	if (!(lhs->collisionEnabled && rhs->collisionEnabled)){
 		return false;
 	}
 
-	int left = position.x;
-	int right = position.x + dimensions.x;
-	int top = position.y;
-	int bottom = position.y + dimensions.y;
+	int left = lhs->position.x;
+	int right = lhs->position.x + lhs->dimensions.x;
+	int top = lhs->position.y;
+	int bottom = lhs->position.y + lhs->dimensions.y;
 
-	int otherLeft = other->position.x;
-	int otherRight = other->position.x + other->dimensions.x;
-	int otherTop = other->position.y;
-	int otherBottom = other->position.y + other->dimensions.y;
+	int otherLeft = rhs->position.x;
+	int otherRight = rhs->position.x + rhs->dimensions.x;
+	int otherTop = rhs->position.y;
+	int otherBottom = rhs->position.y + rhs->dimensions.y;
 
 	return !(right < otherLeft
 		|| left > otherRight
@@ -130,12 +137,22 @@ bool GameObject::checkCollision(std::shared_ptr<const GameObject> other)
 
 void GameObject::updateAll()
 {
+	for (auto it = gameObjectList.begin(); it != gameObjectList.end(); ++it){
+		it->second->update();
+	}
+
+	//Check for collisions
+	for (auto it = gameObjectList.begin(); it != gameObjectList.end(); ++it){
+		if (it->second->hasMoved){
+			handleCollisions(it->second);
+		}
+	}
+
 	for (auto it = gameObjectList.begin(); it != gameObjectList.end(); ){
 		if (it->second->isDead()){
 			it = gameObjectList.erase(it);
 		}
 		else {
-			it->second->update();
 			++it;
 		}
 	}

@@ -6,7 +6,7 @@
 #include "Projectile.h"
 
 
-Player::Player(std::string texturePath, Vector2 startPos) : GameObject(LAYER_ACTORS, Texture::load(texturePath), true, startPos)
+Player::Player(std::string texturePath, Vector2 startPos) : GameObject(LAYER_PLAYER, Texture::load(texturePath), true, startPos)
 {
 
 }

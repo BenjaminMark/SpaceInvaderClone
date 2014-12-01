@@ -15,5 +15,10 @@ public:
 protected:
 	static int numEnemies;
 	const int scoreValue = 10;
+	int actionTimer;
+	int moveCount;
+	Vector2 direction;
+
+	void moveEnemy();
 };
 
