@@ -2,13 +2,11 @@
 
 #include "EventHandler.h"
 #include "Constants.h"
+#include "EnemyManager.h"
 
 class SpaceInvaderClone
 {
 public:
-	static SDL_Window* window;
-	static SDL_Renderer* renderer;
-
 	SpaceInvaderClone();
 	~SpaceInvaderClone();
 
@@ -16,9 +14,11 @@ public:
 
 private:
 	EventHandler inputhandler;
+	EnemyManager eManager;
 
 	bool init();
 	void cleanUp();
 	void initObjects();
+	void spawnEnemies();
 };
 

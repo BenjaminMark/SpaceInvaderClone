@@ -6,7 +6,7 @@ std::unordered_multimap<LayerType, std::shared_ptr<GameObject>> GameObject::game
 
 GameObject::GameObject(LayerType layer_) : layer(layer_), alive(true), collisionEnabled(false)
 {
-
+	texture = std::make_shared<Texture>();
 }
 
 GameObject::GameObject(LayerType layer_, std::shared_ptr<Texture> texture_, bool collisionEnabled_, Vector2 startPos)
@@ -50,6 +50,7 @@ void GameObject::move(const Vector2 direction)
 void GameObject::handleCollisions(std::shared_ptr<GameObject> object)
 {
 	
+	
 
 	bool outofbounds = false;
 
@@ -75,11 +76,18 @@ void GameObject::handleCollisions(std::shared_ptr<GameObject> object)
 		object->notify(std::make_shared<CollisionEvent>(LAYER_BACKGROUND));
 	}
 
+	if (!object->collisionEnabled){
+		return;
+	}
+
 	for (auto pair : GameObject::gameObjectList){
 		if (pair.second != object && checkCollision(object, pair.second)){
 
-			//Notify ourself that we've collided with something
-			object->notify(std::make_shared<CollisionEvent>(pair.second->layer));
+
+			if (!pair.second->hasMoved){//Avoids getting duplicate collision events
+				//Notify ourself that we've collided with something
+				object->notify(std::make_shared<CollisionEvent>(pair.second->layer));
+			}
 
 			//Notify the other object that they've been collided with
 			pair.second->notify(std::make_shared<CollisionEvent>(object->layer));
@@ -106,9 +114,6 @@ void GameObject::handleCollisions(std::shared_ptr<GameObject> object)
 			*/
 		}
 	}
-
-	object->hasMoved = false;
-	object->lastPosition = Vector2();
 }
 
 bool GameObject::checkCollision(std::shared_ptr<const GameObject> lhs, std::shared_ptr<const GameObject> rhs)
@@ -153,6 +158,7 @@ void GameObject::updateAll()
 			it = gameObjectList.erase(it);
 		}
 		else {
+			it->second->hasMoved = false;
 			++it;
 		}
 	}
@@ -160,8 +166,7 @@ void GameObject::updateAll()
 
 void GameObject::renderAll()
 {
-	SDL_SetRenderDrawColor(SpaceInvaderClone::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-	SDL_RenderClear(SpaceInvaderClone::renderer);
+	Texture::clearRenderer();
 
 	for (int i = 0; i < NUM_LAYERS; ++i){
 		auto pair = gameObjectList.equal_range((LayerType)i);
@@ -171,7 +176,7 @@ void GameObject::renderAll()
 		
 	}
 
-	SDL_RenderPresent(SpaceInvaderClone::renderer);
+	Texture::presentRenderer();
 }
 
 void GameObject::registerObject(std::shared_ptr<GameObject> object){

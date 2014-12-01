@@ -3,11 +3,13 @@
 #include "ScoreEvent.h"
 #include "Constants.h"
 #include "CollisionEvent.h"
+#include "Projectile.h"
 
 int Enemy::numEnemies = 0;
+int Enemy::currentDelay = ENEMY_MOVE_DELAY;
 
-Enemy::Enemy(std::string texturePath, Vector2 startPos) : GameObject(LAYER_ENEMY, Texture::load(texturePath), true, startPos), scoreValue(0),
-direction(Vector2(1, 0)), actionTimer(0), moveCount(0)
+Enemy::Enemy(std::string texturePath, Vector2 startPos) : GameObject(LAYER_ENEMY, Texture::load(texturePath), true, startPos), scoreValue(ENEMY_SCORE_VALUE),
+	direction(Vector2(1, 0)), actionTimer(0), moveCount(0)
 {
 	numEnemies++;
 }
@@ -18,9 +20,11 @@ Enemy::~Enemy()
 	numEnemies--;
 }
 
-void Enemy::newEnemy(std::string texturePath, Vector2 startPos)
+std::weak_ptr<Enemy> Enemy::newEnemy(std::string texturePath, Vector2 startPos)
 {
-	GameObject::registerObject(std::make_shared<Enemy>(texturePath, startPos));
+	std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>(texturePath, startPos);
+	GameObject::registerObject(enemy);
+	return std::weak_ptr<Enemy>(enemy);
 }
 
 void Enemy::update()
@@ -34,19 +38,25 @@ void Enemy::update()
 
 			//Bit of a hack to get around movement not happening simultaneously. Enemies should never need to collide anyway.
 			if (colEvent->senderLayer != LAYER_ENEMY){
-				this->alive = false;
+				alive = false;
+				collisionEnabled = false;
 				EventHandler::raiseEvent(std::make_shared<ScoreEvent>(scoreValue));
 			}
 		}
 	}
 
-	if (actionTimer < FPS_CAP/3){
+	if (actionTimer < currentDelay){
 		actionTimer++;
 	}
 	else {
 		actionTimer = 0;
 		moveEnemy();
 	}
+}
+
+void Enemy::shoot()
+{
+	Projectile::newProjectile("Data/Projectiles/projectile_0.png", Vector2(position.x + dimensions.x / 2, position.y + dimensions.y + 20), Vector2(0, 1), ENEMY_PROJECTILE_SPEED);
 }
 
 void Enemy::moveEnemy()

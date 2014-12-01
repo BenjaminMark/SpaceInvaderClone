@@ -14,6 +14,7 @@ public:
 
 protected:
 	int score, highscore;
+	SDL_Colour textcolour;
 
 	void loadHighscore();
 };

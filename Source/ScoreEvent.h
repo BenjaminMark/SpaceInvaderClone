@@ -3,7 +3,7 @@
 class ScoreEvent : public SpaceEvent
 {
 public:
-	int score;
+	const int score;
 
 	ScoreEvent(int addedScore);
 	~ScoreEvent();

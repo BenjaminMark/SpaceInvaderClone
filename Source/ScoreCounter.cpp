@@ -3,7 +3,7 @@
 #include "EventHandler.h"
 
 
-ScoreCounter::ScoreCounter() : GameObject(LAYER_PERSISTENT), score(0)
+ScoreCounter::ScoreCounter() : GameObject(LAYER_TEXT), score(0), textcolour({255, 255, 255})
 {
 	loadHighscore();
 }
@@ -32,6 +32,8 @@ void ScoreCounter::update()
 			score += std::dynamic_pointer_cast<ScoreEvent>(curEvent)->score;
 		}
 	}
+
+	texture->loadText("Score: " + std::to_string(score), textcolour);
 }
 
 

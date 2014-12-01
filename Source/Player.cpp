@@ -46,7 +46,7 @@ void Player::handleInput(std::shared_ptr<InputEvent> inputEvent)
 		switch (inputEvent->input->key.keysym.sym)
 		{
 		case SDLK_SPACE:
-			Projectile::newProjectile("Data/Projectiles/projectile_0.png",Vector2(position.x+dimensions.x/2, position.y-20),Vector2(0,-1));
+			Projectile::newProjectile("Data/Projectiles/projectile_0.png",Vector2(position.x+dimensions.x/2, position.y-20),Vector2(0,-1), PLAYER_PROJECTILE_SPEED);
 			break;
 		default:
 			break;
