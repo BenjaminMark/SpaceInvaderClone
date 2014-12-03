@@ -26,6 +26,7 @@ public:
 
 	static void updateAll();
 	static void renderAll();
+	static void clearAll();
 
 	virtual void update() = 0;
 	virtual void render();

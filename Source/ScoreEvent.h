@@ -3,9 +3,10 @@
 class ScoreEvent : public SpaceEvent
 {
 public:
+	const bool lifeLost;
 	const int score;
 
-	ScoreEvent(int addedScore);
+	ScoreEvent(bool lifeLost, int addedScore);
 	~ScoreEvent();
 };
 

@@ -6,15 +6,16 @@
 class Projectile : public GameObject
 {
 public:
+	Projectile(std::string texturePath, Vector2 startPos, float rotation, int speed);
 	virtual ~Projectile();
 
-	static void newProjectile(std::string texturePath, Vector2 startPos, Vector2 direction, int speed);
+	static std::weak_ptr<Projectile> newProjectile(std::string texturePath, Vector2 startPos, float rotation, int speed);
 	virtual void update();
+	virtual void render();
 
 protected:
+	float rotation;
 	Vector2 direction;
 	int speed;
-
-	Projectile(std::string texturePath, Vector2 startPos, Vector2 direction, int speed);
 };
 

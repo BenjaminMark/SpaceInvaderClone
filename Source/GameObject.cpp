@@ -122,15 +122,15 @@ bool GameObject::checkCollision(std::shared_ptr<const GameObject> lhs, std::shar
 		return false;
 	}
 
-	int left = lhs->position.x;
-	int right = lhs->position.x + lhs->dimensions.x;
-	int top = lhs->position.y;
-	int bottom = lhs->position.y + lhs->dimensions.y;
+	float left = lhs->position.x;
+	float right = lhs->position.x + lhs->dimensions.x;
+	float top = lhs->position.y;
+	float bottom = lhs->position.y + lhs->dimensions.y;
 
-	int otherLeft = rhs->position.x;
-	int otherRight = rhs->position.x + rhs->dimensions.x;
-	int otherTop = rhs->position.y;
-	int otherBottom = rhs->position.y + rhs->dimensions.y;
+	float otherLeft = rhs->position.x;
+	float otherRight = rhs->position.x + rhs->dimensions.x;
+	float otherTop = rhs->position.y;
+	float otherBottom = rhs->position.y + rhs->dimensions.y;
 
 	return !(right < otherLeft
 		|| left > otherRight
@@ -168,7 +168,7 @@ void GameObject::renderAll()
 {
 	Texture::clearRenderer();
 
-	for (int i = 0; i < NUM_LAYERS; ++i){
+	for (int i = 0; i < LAYER_NUMLAYERS; ++i){
 		auto pair = gameObjectList.equal_range((LayerType)i);
 		for (auto it = pair.first; it != pair.second; ++it){
 			it->second->render();
@@ -181,4 +181,8 @@ void GameObject::renderAll()
 
 void GameObject::registerObject(std::shared_ptr<GameObject> object){
 	gameObjectList.emplace(object->layer, object);
+}
+
+void GameObject::clearAll(){
+	gameObjectList.clear();
 }

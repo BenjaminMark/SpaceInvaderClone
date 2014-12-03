@@ -53,6 +53,8 @@
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;</IgnoreSpecificDefaultLibraries>
+      <Profile>false</Profile>
+      <OptimizeReferences>false</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -70,12 +72,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AudioMixer.cpp" />
+    <ClCompile Include="Source\Bunker.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
+    <ClCompile Include="Source\ExplosiveProjectile.cpp" />
+    <ClCompile Include="Source\GameOver.cpp" />
     <ClCompile Include="Source\Projectile.cpp" />
     <ClCompile Include="Source\CollisionEvent.cpp" />
     <ClCompile Include="Source\AudioEvent.cpp" />
-    <ClCompile Include="Source\ScoreCounter.cpp" />
+    <ClCompile Include="Source\ScoreManager.cpp" />
     <ClCompile Include="Source\ScoreEvent.cpp" />
     <ClCompile Include="Source\InputEvent.cpp" />
     <ClCompile Include="Source\Background.cpp" />
@@ -90,12 +96,16 @@
     <ClCompile Include="Source\SpaceEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AudioMixer.h" />
+    <ClInclude Include="Source\Bunker.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyManager.h" />
+    <ClInclude Include="Source\ExplosiveProjectile.h" />
+    <ClInclude Include="Source\GameOver.h" />
     <ClInclude Include="Source\Projectile.h" />
     <ClInclude Include="Source\CollisionEvent.h" />
     <ClInclude Include="Source\AudioEvent.h" />
-    <ClInclude Include="Source\ScoreCounter.h" />
+    <ClInclude Include="Source\ScoreManager.h" />
     <ClInclude Include="Source\ScoreEvent.h" />
     <ClInclude Include="Source\InputEvent.h" />
     <ClInclude Include="Source\Background.h" />
@@ -104,7 +114,9 @@
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\EventHandler.h" />
+    <ClInclude Include="Source\SoundType.h" />
     <ClInclude Include="Source\SpaceEventType.h" />
+    <ClInclude Include="Source\UpgradeState.h" />
     <ClInclude Include="Source\Vector2.h" />
     <ClInclude Include="Source\Texture.h" />
     <ClInclude Include="Source\SpaceInvaderClone.h" />

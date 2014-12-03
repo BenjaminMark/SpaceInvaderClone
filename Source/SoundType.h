@@ -1,0 +1,8 @@
+#pragma once
+
+enum SoundType{
+	SOUND_SHOOT,
+	SOUND_ENEMYDEATH,
+	SOUND_EXPLOSION,
+	SOUND_NUMSOUNDS
+};

@@ -25,12 +25,15 @@ public:
 	static void presentRenderer();
 	void loadText(std::string text, SDL_Colour colour);
 	void free();
-	void render(Vector2 position);
+	void render(Vector2 position, float rotation = 0.0);
 	int width(){ return w; }
 	int height(){ return h; }
+	std::string getPath() { return path; }
 
 private:
 	SDL_Texture* texture;
+
+	std::string path;
 
 	static SDL_Window* window;
 	static SDL_Renderer* renderer;

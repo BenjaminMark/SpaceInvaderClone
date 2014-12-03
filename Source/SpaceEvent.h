@@ -6,11 +6,9 @@
 class SpaceEvent
 {
 public:
+	SpaceEvent(SpaceEventType type_);
 	const SpaceEventType type;
 
 	virtual ~SpaceEvent();
-
-protected:
-	SpaceEvent(SpaceEventType type_);
 };
 

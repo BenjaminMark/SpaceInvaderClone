@@ -4,6 +4,8 @@
 #include "Constants.h"
 #include "CollisionEvent.h"
 #include "Projectile.h"
+#include "AudioEvent.h"
+#include "SoundType.h"
 
 int Enemy::numEnemies = 0;
 int Enemy::currentDelay = ENEMY_MOVE_DELAY;
@@ -38,9 +40,10 @@ void Enemy::update()
 
 			//Bit of a hack to get around movement not happening simultaneously. Enemies should never need to collide anyway.
 			if (colEvent->senderLayer != LAYER_ENEMY){
+				EventHandler::raiseEvent(std::make_shared<AudioEvent>(SOUND_ENEMYDEATH));
 				alive = false;
 				collisionEnabled = false;
-				EventHandler::raiseEvent(std::make_shared<ScoreEvent>(scoreValue));
+				EventHandler::raiseEvent(std::make_shared<ScoreEvent>(false, scoreValue));
 			}
 		}
 	}
@@ -56,7 +59,7 @@ void Enemy::update()
 
 void Enemy::shoot()
 {
-	Projectile::newProjectile("Data/Projectiles/projectile_0.png", Vector2(position.x + dimensions.x / 2, position.y + dimensions.y + 20), Vector2(0, 1), ENEMY_PROJECTILE_SPEED);
+	Projectile::newProjectile("Data/Projectiles/projectile_0.png", Vector2(position.x + dimensions.x / 2, position.y + dimensions.y + 20), 0.0, ENEMY_PROJECTILE_SPEED);
 }
 
 void Enemy::moveEnemy()

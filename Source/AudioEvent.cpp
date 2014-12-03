@@ -1,7 +1,7 @@
 #include "AudioEvent.h"
 
 
-AudioEvent::AudioEvent() : SpaceEvent(EVENT_AUDIO)
+AudioEvent::AudioEvent(SoundType type_) : SpaceEvent(EVENT_AUDIO), type(type_)
 {
 }
 

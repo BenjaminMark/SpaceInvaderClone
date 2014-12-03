@@ -2,11 +2,14 @@
 #include "GameObject.h"
 #include "Background.h"
 #include "Player.h"
-#include "ScoreCounter.h"
+#include "ScoreManager.h"
 #include "Enemy.h"
 #include "SDL_TTF.h"
 #include "Timer.h"
-
+#include "Bunker.h"
+#include "GameOver.h"
+#include "AudioMixer.h"
+#include "SDL_mixer.h"
 
 SpaceInvaderClone::SpaceInvaderClone()
 {
@@ -23,12 +26,12 @@ int SpaceInvaderClone::run()
 		return 1;
 	}
 
-	bool quit = false;
+	int run = 1;
 	Timer frameTimer;
 
-	while (!quit){
+	while (run > 0){
 		frameTimer.start();
-		quit = inputhandler.handleEvents();
+		run = inputhandler.handleEvents();
 
 		GameObject::updateAll();
 
@@ -43,20 +46,21 @@ int SpaceInvaderClone::run()
 		}
 	}
 
+	if (run == 0){
+		GameObject::clearAll();
+		GameOver gameover;
+		EventHandler::flushEvents();
+		run = gameover.waitForPlayer();
+	}
+
 	cleanUp();
 
-	return 0;
+	return run;
 }
 
 
 bool SpaceInvaderClone::init()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-	{
-		printf("Error Initializing SDL: %s\n", SDL_GetError());
-		return false;
-	}
-
 	if (!Texture::initRendering()){
 		return false;
 	}
@@ -69,8 +73,6 @@ bool SpaceInvaderClone::init()
 void SpaceInvaderClone::cleanUp()
 {
 	Texture::cleanUpRendering();
-	
-	SDL_Quit();
 }
 
 
@@ -80,6 +82,11 @@ void SpaceInvaderClone::initObjects()
 
 	Player::newPlayer("Data/Player/player_0.png", PLAYER_STARTPOS);
 	Background::newBackground("Data/background_0.png");
-	ScoreCounter::newScoreCounter();
+	ScoreManager::newScoreCounter();
+	AudioMixer::newAudioMixer();
+
+	Bunker::newBunker("Data/Bunkers/bunker_0.png", BUNKER_STARTPOS);
+	Bunker::newBunker("Data/Bunkers/bunker_0.png", Vector2(static_cast<float>(WINDOW_WIDTH - BUNKER_STARTPOS.x - 164), BUNKER_STARTPOS.y));
+	Bunker::newBunker("Data/Bunkers/bunker_0.png", Vector2(static_cast<float>(WINDOW_WIDTH / 2 - 82), BUNKER_STARTPOS.y));
 }
 

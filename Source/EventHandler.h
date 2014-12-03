@@ -13,9 +13,10 @@ class EventHandler
 public:
 	EventHandler();
 	~EventHandler();
-	bool handleEvents();
+	int handleEvents();
 	static void registerObserver(std::weak_ptr<GameObject> object, SpaceEventType type);
 	static void raiseEvent(std::shared_ptr<SpaceEvent> e);
+	static void flushEvents();
 
 private:
 	static std::unordered_map<SpaceEventType, std::list<std::weak_ptr<GameObject>>> observers;

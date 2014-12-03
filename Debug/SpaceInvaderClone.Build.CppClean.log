@@ -1,8 +1,12 @@
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\vc120.pdb
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\vc120.idb
+c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\bunker.obj
+c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\enemy.obj
+c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\enemymanager.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\projectile.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\collisionevent.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\audioevent.obj
+c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\scorecounter.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\scoreevent.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\inputevent.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\background.obj
@@ -15,8 +19,7 @@ c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\texture.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\spaceinvaderclone.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\timer.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\spaceevent.obj
-c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\enemy.obj
-c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\scorecounter.obj
+c:\users\feriluce\dropbox\spaceinvaderclone\spaceinvaderclone\debug\scoremanager.obj
 c:\users\feriluce\dropbox\spaceinvaderclone\debug\spaceinvaderclone.ilk
 c:\users\feriluce\dropbox\spaceinvaderclone\debug\spaceinvaderclone.exe
 c:\users\feriluce\dropbox\spaceinvaderclone\debug\spaceinvaderclone.pdb

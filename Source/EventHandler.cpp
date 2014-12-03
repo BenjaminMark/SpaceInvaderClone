@@ -17,15 +17,19 @@ EventHandler::~EventHandler()
 
 }
 
-bool EventHandler::handleEvents()
+int EventHandler::handleEvents()
 {
 	if (handleInput()){
-		return true;
+		return -1;
 	}
 
 	while(!eventQueue.empty()){
 		std::shared_ptr<SpaceEvent> curEvent = eventQueue.front();
 		eventQueue.pop();
+		if (curEvent->type == EVENT_GAMEOVER){
+			return 0;
+		}
+
 		auto recipients = observers.find(curEvent->type);
 
 		if (recipients != observers.end()){
@@ -41,7 +45,7 @@ bool EventHandler::handleEvents()
 			}
 		}
 	}
-	return false;
+	return 1;
 }
 
 void EventHandler::registerObserver(std::weak_ptr<GameObject> object, SpaceEventType type)
@@ -82,4 +86,11 @@ bool EventHandler::handleInput()
 		input = new SDL_Event();
 	}
 	return false;
+}
+
+void EventHandler::flushEvents()
+{
+	while (!eventQueue.empty()){
+		eventQueue.pop();
+	}
 }

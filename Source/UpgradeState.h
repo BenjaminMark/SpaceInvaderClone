@@ -1,0 +1,8 @@
+#pragma once
+
+enum UpgradeState{
+	USTATE_DEFAULT = 0,
+	USTATE_SPREAD_SHOT,
+	USTATE_EXPLOSIVE_SHOT,
+	USTATE_NUMSTATES
+};

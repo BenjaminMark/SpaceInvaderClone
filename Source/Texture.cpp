@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include "SpaceInvaderClone.h"
-
+#include <math.h>
 
 std::unordered_map<std::string, std::weak_ptr<Texture>> Texture::textureMap;
 SDL_Window* Texture::window = nullptr;
@@ -8,7 +8,7 @@ SDL_Renderer* Texture::renderer = nullptr;
 TTF_Font* Texture::scoreFont = nullptr;
 
 
-Texture::Texture() : texture(nullptr), w(0), h(0)
+Texture::Texture() : texture(nullptr), w(0), h(0), path("")
 {
 
 }
@@ -32,6 +32,7 @@ std::shared_ptr<Texture> Texture::load(std::string path)
 
 		SDL_Texture* tempTexture = nullptr;
 		std::shared_ptr<Texture> retTex = std::make_shared<Texture>();
+		retTex->path = path;
 
 		SDL_Surface* intermediarySurface = IMG_Load(path.c_str());
 		if (intermediarySurface == nullptr){
@@ -74,14 +75,16 @@ void Texture::free()
 	}
 }
 
-void Texture::render(Vector2 pos)
+void Texture::render(Vector2 pos, float rotation)
 {
-	SDL_Rect quad = { pos.x, pos.y, w, h };
-	SDL_RenderCopy(Texture::renderer, texture, nullptr, &quad);
+	SDL_Rect quad = { static_cast<int>(round(pos.x)), static_cast<int>(round(pos.y)), w, h };
+	SDL_RenderCopyEx(Texture::renderer, texture, nullptr, &quad, rotation, nullptr, SDL_FLIP_NONE);
 }
 
 void Texture::loadText(std::string text, SDL_Colour colour)
 {
+	free();
+
 	SDL_Surface* tmpSurface = TTF_RenderText_Blended(scoreFont, text.c_str(), colour);
 	if (tmpSurface == nullptr){
 		printf("Could not load the the text: %s. Error: %s\n", text, TTF_GetError());
@@ -118,20 +121,6 @@ bool Texture::initRendering()
 
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-	//Initialize PNG loading
-	int imgFlags = IMG_INIT_PNG;
-	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
-	{
-		printf("Error initializing SDL_Image: %s\n", IMG_GetError());
-		return false;
-	}
-
-	if (TTF_Init() == -1)
-	{
-		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-		return false;
-	}
-
 	scoreFont = TTF_OpenFont("Data/Fonts/Arvo-Regular.ttf", 28);
 
 	if (scoreFont == nullptr){
@@ -146,10 +135,6 @@ void Texture::cleanUpRendering()
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	TTF_CloseFont(scoreFont);
-
-	//Quit SDL subsystems
-	TTF_Quit();
-	IMG_Quit();
 }
 
 
